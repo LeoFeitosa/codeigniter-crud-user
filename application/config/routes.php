@@ -5,7 +5,7 @@ $route['default_controller'] = '';
 
 /* Routes Users*/
 $route['auth'] = 'user/user';
-$route['add'] = 'user/user/add';
+$route['addedit'] = 'user/user/add_edit';
 $route['details/(:num)'] = 'user/user/details/$1';
 
 $route['404_override'] = '';

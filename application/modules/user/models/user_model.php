@@ -25,7 +25,22 @@ class User_model extends CI_Model {
 
 		$this->db->insert('users', $data);
 
-		if($this->db->insert_id() > 0)
+		if($this->db->affected_rows() > 0)
+			return true;
+		else
+			return false;
+	}
+
+	public function edit($data)
+	{
+		$id =  $data['id'];
+		unset($data['id']);
+		$data['updated'] = date('Y-m-d H:i:s');
+
+		$this->db->where('id', $id);
+		$this->db->update('users', $data);
+
+		if($this->db->affected_rows() > 0)
 			return true;
 		else
 			return false;
