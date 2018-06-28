@@ -30,4 +30,12 @@ class User_model extends CI_Model {
 		else
 			return false;
 	}
+
+	public function details($id)
+	{
+		$this->db->select('id, nivel, name, email, active');
+		$this->db->where('id', $id);
+		$query = $this->db->get('users');
+		return $query->result();
+	}
 }

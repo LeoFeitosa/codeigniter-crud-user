@@ -1,12 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Authentication extends MX_Controller {
+class User extends MX_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model("user_model");
+		$this->load->helper('email');
 	}
 
 	public function index()
@@ -45,7 +46,7 @@ class Authentication extends MX_Controller {
 						->set_output(json_encode(array('error' => 'Usuário ja cadastrado!')));
 		}
 
-		if(empty($name) || empty($email) || empty($password) || empty($nivel)) {
+		if(empty($name) || empty($email) ||!valid_email($email) || empty($password) || empty($nivel)) {
 			return $this->output
 							->set_status_header(409)
 							->set_content_type('application/json')
@@ -61,6 +62,21 @@ class Authentication extends MX_Controller {
 							->set_content_type('application/json')
 							->set_output(json_encode(array('error' => 'Erro ao cadastrar!')));
 			}
+		}
+	}
+
+	public function details($id)
+	{
+		$user = $this->user_model->details($id);
+		if($user) {
+			return $this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('success' => $user)));
+		}else{
+			return $this->output
+							->set_status_header(404)
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'Usuário não encontrado!')));
 		}
 	}
 }
