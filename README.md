@@ -10,9 +10,27 @@ Used CodeIgniter Version 3.1.9 + PHP 7.2.4 + MySQL
 
 PHP 5.6+, MySQL
 
-## Deployment
+```sql
 
-Add additional notes about how to deploy this on a live system
+    CREATE TABLE `users` (
+      `id` int(11) NOT NULL,
+      `nivel` int(11) NOT NULL,
+      `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+      `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+      `password` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+      `active` int(11) NOT NULL DEFAULT '1',
+      `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+      `updated` timestamp NULL DEFAULT NULL
+    ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+    
+    
+    ALTER TABLE `users`
+      ADD PRIMARY KEY (`id`);
+    
+    
+    ALTER TABLE `users`
+      MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+```
 
 ## Built With
 
