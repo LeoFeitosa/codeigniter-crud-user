@@ -6,6 +6,7 @@ class User extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('email');
 		$this->load->model("user_model");
 		$this->load->library('form_validation');
 	}
@@ -107,4 +108,48 @@ class User extends MX_Controller {
 		}
 	}
 
+	public function recover()
+	{
+		$email = trim($this->input->post('email'));
+		if(valid_email($email)) {
+			if($user = (array)$this->user_model->check_email($email)[0]) {
+
+				if($new_password = $this->user_model->new_password($user['id'])) {
+					$data = array(
+						'password' => $new_password,
+						'email' => $email
+					);
+
+					$send_email = modules::run('email/email/recover', $data);				
+
+					if($send_email != true) {
+						return $this->output
+									->set_status_header(404)
+									->set_content_type('application/json')
+									->set_output(json_encode(array('error' => $send_email)));
+					}else{
+						return $this->output
+									->set_status_header(404)
+									->set_content_type('application/json')
+									->set_output(json_encode(array('success' => 'Check seu email e siga as instruções para recuperar sua senha!')));
+					}
+				}else{
+					return $this->output
+									->set_status_header(404)
+									->set_content_type('application/json')
+									->set_output(json_encode(array('error' => 'Problema ao gerar nova senha!')));
+				}
+			}else{
+				return $this->output
+								->set_status_header(404)
+								->set_content_type('application/json')
+								->set_output(json_encode(array('error' => 'Cadastro não encontrado!')));
+			}
+		}else{
+			return $this->output
+							->set_status_header(404)
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'Informe um email valido!')));
+		}
+	}
 }
