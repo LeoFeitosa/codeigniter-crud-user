@@ -10,7 +10,7 @@ class User_model extends CI_Model {
 
 	public function check_email($email)
 	{
-		$query = $this->db->get_where('users', array('email' => $email));
+		$query = $this->db->get_where('users', array('email' => $email, 'active' => 1));
 		return $query->result();
 	}
 
@@ -52,5 +52,20 @@ class User_model extends CI_Model {
 		$this->db->where('id', $id);
 		$query = $this->db->get('users');
 		return $query->result();
+	}
+
+	public function new_password($id)
+	{
+		$password = bin2hex(openssl_random_pseudo_bytes(3));
+		$data['password'] = sha1(md5(base64_encode($password)));
+		$data['updated'] = date('Y-m-d H:i:s');
+
+		$this->db->where('id', $id);
+		$this->db->update('users', $data);
+
+		if($this->db->affected_rows() > 0)
+			return $password;
+		else
+			return false;
 	}
 }
