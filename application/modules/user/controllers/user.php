@@ -6,6 +6,7 @@ class User extends MX_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('user');
 		$this->load->helper('email');
 		$this->load->model("user_model");
 		$this->load->library('form_validation');
@@ -16,9 +17,7 @@ class User extends MX_Controller {
 		$email = $this->input->post('email');
 		$password = sha1(md5(base64_encode($this->input->post('password'))));
 
-		$user = $this->user_model->check($email, $password);
-
-		if($user) {
+		if($user = $this->user_model->check($email, $password)) {
 			$this->session->set_userdata("user", $user);
 			return $this->output
 						->set_content_type('application/json')
@@ -31,15 +30,32 @@ class User extends MX_Controller {
 		}
 	}	
 
-	public function logout(){
-		$this->session->sess_destroy();
-		return $this->output
-						->set_content_type('application/json')
-						->set_output(json_encode(array('success' => 'Logout realizado com sucesso!')));
+	public function logout()
+	{
+		if(!is_logged()) {
+			$this->session->unset_userdata('user'); 
+			$this->session->sess_destroy();
+
+			return $this->output
+							->set_content_type('application/json')
+							->set_output(json_encode(array('success' => 'Logout realizado com sucesso!')));
+		}else{
+			return $this->output
+							->set_status_header(401)
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'Sessão inexistente!')));
+		}
 	}
 
 	public function add_edit()
 	{
+		if(!is_logged()) {
+			return $this->output
+							->set_status_header(401)
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'Sessão inexistente!')));
+		}
+
 		$this->form_validation->set_rules('name', 'Nome', 'trim|required|min_length[5]|max_length[30]');
 		$this->form_validation->set_rules('password', 'Senha', 'trim|required|min_length[6]');
 		$this->form_validation->set_rules('passconf', 'Confirmação de senha', 'trim|required|matches[password]');
@@ -95,8 +111,14 @@ class User extends MX_Controller {
 
 	public function details($id)
 	{
-		$user = $this->user_model->details($id);
-		if($user) {
+		if(!is_logged()) {
+			return $this->output
+							->set_status_header(401)
+							->set_content_type('application/json')
+							->set_output(json_encode(array('error' => 'Sessão inexistente!')));
+		}
+
+		if($user = $this->user_model->details($id)) {
 			return $this->output
 							->set_content_type('application/json')
 							->set_output(json_encode(array('success' => $user)));
