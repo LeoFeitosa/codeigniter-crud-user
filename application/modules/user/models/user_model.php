@@ -4,7 +4,7 @@ class User_model extends CI_Model {
 
 	public function check($email, $password)
 	{
-		$this->db->select('id, name, email');
+		$this->db->select('id, name, email, nivel');
 		$this->db->where('email', $email);
 		$this->db->where('password', $password);		
 		$query = $this->db->get('users');
@@ -28,10 +28,7 @@ class User_model extends CI_Model {
 
 		$this->db->insert('users', $data);
 
-		if($this->db->affected_rows() > 0)
-			return true;
-		else
-			return false;
+		return (($this->db->affected_rows() > 0) ? true : false);
 	}
 
 	public function edit($data)
@@ -43,10 +40,7 @@ class User_model extends CI_Model {
 		$this->db->where('id', $id);
 		$this->db->update('users', $data);
 
-		if($this->db->affected_rows() > 0)
-			return true;
-		else
-			return false;
+		return (($this->db->affected_rows() > 0) ? true : false);
 	}
 
 	public function details($id)
@@ -66,9 +60,24 @@ class User_model extends CI_Model {
 		$this->db->where('id', $id);
 		$this->db->update('users', $data);
 
-		if($this->db->affected_rows() > 0)
-			return $password;
-		else
-			return false;
+		return (($this->db->affected_rows() > 0) ? true : false);
+	}
+
+	public function remove_active_session($user_id, $session_new)
+	{
+		// pega sessao da tabela user
+		$session_old = $this->db->select('session_id')
+										->where('id', $user_id)
+										->get('users')
+										->row('session_id');
+
+		// deleta a mesma sessao da tabela session
+		if(!empty($session_old)) {
+			$this->db->delete('ci_sessions', array('id' => $session_old)); 
+		}
+
+		// insere a nova sessao na tabela users
+		$this->db->where('id', $user_id);
+		$this->db->update('users', array('session_id' => $session_new));
 	}
 }
