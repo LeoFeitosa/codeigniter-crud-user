@@ -25,10 +25,10 @@ CREATE TABLE `users` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;    
 
 ALTER TABLE `users`
-	ADD PRIMARY KEY (`id`);    
+  ADD PRIMARY KEY (`id`);    
 
 ALTER TABLE `users`
-	MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ```
 Table ci_sessions
 ```sql
