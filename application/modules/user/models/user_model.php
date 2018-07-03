@@ -65,19 +65,16 @@ class User_model extends CI_Model {
 
 	public function remove_active_session($user_id, $session_new)
 	{
-		// pega sessao da tabela user
-		$session_old = $this->db->select('session_id')
-										->where('id', $user_id)
-										->get('users')
-										->row('session_id');
+    $session_old = $this->db->select('session_id')
+                    ->where('id', $user_id)
+                    ->get('users')
+                    ->row('session_id');
 
-		// deleta a mesma sessao da tabela session
 		if(!empty($session_old)) {
-			$this->db->delete('ci_sessions', array('id' => $session_old)); 
+      $this->db->delete('ci_sessions', array('id' => $session_old)); 
 		}
 
-		// insere a nova sessao na tabela users
-		$this->db->where('id', $user_id);
-		$this->db->update('users', array('session_id' => $session_new));
+    $this->db->where('id', $user_id);
+    $this->db->update('users', array('session_id' => $session_new));
 	}
 }
