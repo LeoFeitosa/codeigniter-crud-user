@@ -16,9 +16,13 @@ class User extends MX_Controller {
 	{
 		$email = $this->input->post('email');
 		$password = sha1(md5(base64_encode($this->input->post('password'))));
-
-		if($user = $this->user_model->check($email, $password)) {
+		$session_id = session_id();
+		
+		if($user = $this->user_model->check($email, $password, $session_id)) {
 			$this->session->set_userdata("user", $user);
+
+			$this->user_model->remove_active_session($user[0]->id, session_id());
+
 			return $this->output
 						->set_content_type('application/json')
 						->set_output(json_encode(array('success' => 'Login realizado com sucesso!')));
@@ -32,7 +36,7 @@ class User extends MX_Controller {
 
 	public function logout()
 	{
-		if(!is_logged()) {
+		if(is_logged()) {
 			$this->session->unset_userdata('user'); 
 			$this->session->sess_destroy();
 
