@@ -14,6 +14,7 @@ PHP 5.6+, MySQL
 
     CREATE TABLE `users` (
       `id` int(11) NOT NULL,
+  		`session_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
       `nivel` int(11) NOT NULL,
       `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
       `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
