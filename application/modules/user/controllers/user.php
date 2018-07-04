@@ -23,9 +23,16 @@ class User extends MX_Controller {
 
 			$this->user_model->remove_active_session($user[0]->id, session_id());
 
-			return $this->output
-						->set_content_type('application/json')
-						->set_output(json_encode(array('success' => 'Login realizado com sucesso!')));
+			if(empty(data_user())) {
+        return $this->output
+              ->set_status_header(404)
+              ->set_content_type('application/json')
+              ->set_output(json_encode(array('error' => 'Problema ao gerar sessão!')));
+      }else{
+        return $this->output
+              ->set_content_type('application/json')
+              ->set_output(json_encode(data_user()));
+      }
 		}else{			
 			return $this->output
 						->set_status_header(401)
