@@ -60,7 +60,7 @@ class User_model extends CI_Model {
 		$this->db->where('id', $id);
 		$this->db->update('users', $data);
 
-		return (($this->db->affected_rows() > 0) ? true : false);
+		return (($this->db->affected_rows() > 0) ? $password : false);
 	}
 
 	public function remove_active_session($user_id, $session_new)
