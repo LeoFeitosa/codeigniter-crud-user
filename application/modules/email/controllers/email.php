@@ -33,7 +33,7 @@ class Email extends MX_Controller {
 	{
 		$data['password'] = $recover_data['password'];
 		$this->email->initialize($this->config);
-		$this->email->from("no-reply@universidadebrasil.edu.br", 'Redip');
+		$this->email->from("no-reply@domain.edu.br", 'Redip');
 		$this->email->to($recover_data['email']);
 		$this->email->subject('Recuperação de acesso');
 		$this->email->message($this->load->view('recover-template', $data, TRUE));
