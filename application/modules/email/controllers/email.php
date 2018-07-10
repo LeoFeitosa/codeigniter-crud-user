@@ -10,10 +10,10 @@ class Email extends MX_Controller {
 
 		$this->config = array(
 			'protocol' => 'smtp',
-			'smtp_host' => 'smtp.office365.com',
+			'smtp_host' => 'smtp.domain.com',
 			'smtp_port' => 587,
-			'smtp_user' => 'no-reply@universidadebrasil.edu.br',
-			'smtp_pass' => 'Unibrasil@2017',
+			'smtp_user' => 'no-reply@domain.edu.br',
+			'smtp_pass' => 'domain',
 			'smtp_crypto' => 'tls',
 			'mailtype' => 'html',
 			'smtp_timeout' => '60',
